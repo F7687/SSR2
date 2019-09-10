@@ -50,7 +50,7 @@
             type="textarea"
             :rows="2"
             placeholder="说点什么吧..."
-            v-model="textarea"
+            v-model="docomments.content"
             resize="none"
           ></el-input>
         </el-form-item>
@@ -73,13 +73,15 @@
             <img width="100%" :src="dialogImageUrl" alt />
           </el-dialog>
 
-          <el-form-item style="text-align:end">
-            <el-button type="primary" @click="submitForm('docomments')">提交</el-button>
+          <el-form-item style="text-align:end" >
+            <el-button type="primary" @click="submitForm()">提交</el-button>
             <el-button @click="resetForm('docomments')">重置</el-button>
           </el-form-item>
         </div>
       </el-form>
+      <Comment/>
     </div>
+    
     <!-- 文件上传 -->
 
     <!-- 评论模块End -->
@@ -87,8 +89,12 @@
 </template>
 
 <script>
+import Comment from '@/components/post/comment.vue'
 // import icon from '@/assets/font_rag6czyto8p'
 export default {
+  components:{
+    Comment
+  },
   data() {
     return {
       // url带过来的id
@@ -96,7 +102,18 @@ export default {
       //   文章详细内容
       content: {},
       comments: [],
-      docomments: {},
+      docomments: {
+        content:'',  //评论内容
+        score:{},      //评分对象
+        location:'',   //位置评分float
+        service:'',
+        fancility:'',
+        all:'',
+        pices:[],
+        hotel:0,    //酒店id
+        post:0,     //文章id
+        flollw:0    //回复id
+      },
       textarea: "",
       // 文件上传
       dialogImageUrl: "",
@@ -138,7 +155,9 @@ export default {
     //   return { Authorization:`Bearer ${token}`}
     // },
     // 提交评论/重置
-    submitForm() {},
+    submitForm() {
+      console.log(this.docomments);
+    },
     resetForm() {},
     // 文件上传
     handleRemove(file, fileList) {

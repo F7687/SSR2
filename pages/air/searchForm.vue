@@ -195,7 +195,11 @@ export default {
         params:this.state
       }).then((res)=>{
         console.log('****************');
-        console.log(res)
+        // console.log(res)
+        // const airs=JSON.parse(localStorage.getItem('airs')||`[]`)
+        const airs=[]
+        airs.push(this.state)
+        localStorage.setItem('airs',JSON.stringify(airs))
         this.$router.push({
           path:'/air/flights',
           query:this.state

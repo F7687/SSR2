@@ -81,7 +81,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -89,11 +88,6 @@ export default {
       form: [],
       content: [],
       id:'7687'
-      // 判断3张以上的图片跟3张以下的图片的显示方式
-      
-        // imgMax3:true,
-        // imgMin3:true
-    
     };
   },
   methods: {
@@ -103,36 +97,12 @@ export default {
       console.log(item.id);
       let id={id:item.id}
       this.$router.push({path:'/post/detail',query:id})
-      // this.$axios({
-      //   url:'posts',
-      //   params:{id}
-      // }).then((res)=>{
-      //   console.log(res)
-
-      // }).catch((err)=>{
-      //   console.log(err)
-      // })
-      // console.log(this.form);
-      // this.content=[]
-      // this.$emit('id',this.id)
-      // console.log('传递的☞');
     },
     //--------测试end----------
     async init() {
       let res = await this.$axios({ url: "/posts" });
       console.log(res);
       this.content = res.data.data;
-      // console.log('*********************');
-      // console.log(this.content);
-      // console.log('*********************');
-      // for(let i=0;i<this.content.length;i++){
-      //   if(this.content[i].images.length>=3){
-      //     console.log(this.content[i]);
-      //     this.objClass.imgMax3=false;
-      //     this.objClass.imgMin3=true;
-      //   }
-      // }
-      // console.log(this.objClass);
     }
   },
   mounted() {

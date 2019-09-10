@@ -42,8 +42,9 @@
                         </el-col>
                         <el-col :span="3" class="choose-button">
                             <el-button 
-                            type="warning" 
-                            size="mini">
+                             type="warning" 
+                   size="mini"
+                   @click="handleChoose(data.id, item.seat_xid)">
                             选定
                             </el-button>
                             <p>剩余：{{item.discount}}</p>
@@ -72,6 +73,16 @@ export default {
         }
     },
     methods:{
+        handleChoose(dataid,sid){
+            console.log(dataid,sid);
+            this.$router.push({
+                path:'/air/order',
+                query:{
+                    id:dataid,
+                    sid
+                }
+            })
+        },
         Expand(){
             // console.log(123);
             this.isShow=true
@@ -92,6 +103,15 @@ export default {
              return `${hour}时${minute}分`
         }
     },
+     handleChoose(id, seatId){
+            this.$router.push({
+                path: "/air/order", 
+                query: {
+                    id,
+                    seat_xid: seatId
+                }
+            })
+        },
     mounted(){
        
     }

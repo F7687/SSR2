@@ -5,7 +5,7 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <!-- <FlightsFlights :data="flightsItem" /> -->
+          <FlightsFlights :data="cacheFlightsData" @setDataList="setDataList" />
         </div>
 
         <!-- 航班头部布局 -->
@@ -35,6 +35,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside/>
       </div>
     </el-row>
   </section>
@@ -44,13 +45,15 @@
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsItem from "@/components/air/flightsItem.vue";
 import FlightsFlights from "@/components/air/flightsFlights.vue";
+import FlightsAside from "@/components/air/flightsAside.vue";
 // import moment from "moment";
 
 export default {
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFlights
+    FlightsFlights,
+    FlightsAside
   },
   data() {
     return {
@@ -62,10 +65,47 @@ export default {
       newFlights: [],
       pageSize: 5,
       pageIndex: 1,
-      total: 0
+      total: 0,
+      cacheFlightsData: {
+        // 缓存一份数据，只会修改一次
+        flights: [],
+        info: {},
+        options: {}
+      }
     };
   },
   methods: {
+    getData() {
+      this.$axios({
+        url: `airs`,
+        params: this.$route.query
+      }).then(res => {
+        this.flightsData = res.data;
+
+        // 缓存一份新的列表数据数据，这个列表不会被修改
+        // 而flightsData会被修改
+        this.cacheFlightsData = { ...res.data };
+
+        this.setDataList();
+      });
+    },
+
+    // 设置dataList数据
+    // arr是展示的新数据，该方法将会传递给过滤组件使用
+    setDataList(arr) {
+      console.log(arr);
+      // 如果有新数据从第一页开始显示
+      if (arr) {
+        this.pageIndex = 1;
+        this.flightsItem.flights = arr;
+        this.flightsItem.total = arr.length;
+        this.total=arr.length
+      }
+      console.log(this.newFlights);
+      const start = (this.pageIndex - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      this.newFlights = this.flightsItem.flights.slice(start, end);
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageSize = val;
@@ -85,6 +125,13 @@ export default {
       console.log(this.newFlights);
     }
   },
+  watch: {
+        // watch可以监听this下的所有属性
+        $route(){
+            // 请求航班列表数据
+            this.getData();
+        }
+    },
   mounted() {
     console.log(this.$route);
     this.$axios({
@@ -106,6 +153,7 @@ export default {
       });
     //  this.$route.query=this.flightsItem
     //  console.log(this.fightsItem);
+    this.getData();
   }
 };
 </script>
